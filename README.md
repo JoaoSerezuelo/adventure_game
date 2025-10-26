@@ -1,82 +1,73 @@
-# Jogo "Escolha Sua Própria Aventura" Cooperativo Multijogador
+# Adventure Game
 
-Este projeto implementa um jogo interativo do tipo "escolha sua própria aventura" com funcionalidade multijogador cooperativa e um chat em tempo real, utilizando a biblioteca RPyC para comunicação entre cliente e servidor.
+Um jogo de aventura multijogador desenvolvido em Python.
 
-## Requisitos
+## Sobre o Jogo
 
-- Python 3.x
-- Biblioteca RPyC
+Este é um jogo de aventura baseado em rede, onde um jogador atua como o servidor (Host) e outros jogadores podem se conectar como clientes para participar da mesma aventura.
+
+## Pré-requisitos
+
+Antes de começar, garanta que você tenha os seguintes softwares instalados:
+
+* [Python](https://www.python.org/downloads/)
+* [Git](https://git-scm.com/downloads) (para clonar o repositório)
+* Um software de VPN para simulação de LAN, como o [Radmin VPN](https://www.radmin-vpn.com/br/).
 
 ## Instalação
 
-1.  **Clone ou baixe o repositório:**
-    ```bash
-    # Exemplo: git clone <url_do_repositorio>
-    # Ou baixe os arquivos diretamente
+1.  Abra seu terminal ou prompt de comando.
+2.  Clone este repositório:
+    ```sh
+    git clone [https://github.com/JoaoSerezuelo/adventure_game.git](https://github.com/JoaoSerezuelo/adventure_game.git)
     ```
-
-2.  **Instale as biblioteca do projeto:**
-    ```bash
+3.  Navegue até a pasta do projeto:
+    ```sh
+    cd adventure_game
+    ```
+4.  Instale as dependências Python necessárias:
+    ```sh
     pip install -r requirements.txt
     ```
 
-## Estrutura do Projeto
+## Como Jogar
 
-- `server.py`: Contém a lógica do servidor RPyC que gerencia o estado do jogo, as páginas da história, os votos dos jogadores e as mensagens do chat.
-- `client.py`: Implementa o cliente RPyC que os jogadores utilizam para interagir com o jogo, visualizar a história, fazer escolhas, votar e conversar.
-- `story_data.py`: Define a estrutura da história, incluindo páginas e opções de escolha.
+Para jogar este jogo, uma pessoa deve ser o **Host (Servidor)** e os outros jogadores serão os **Clientes**.
 
-## Como Executar
+### 1. Configuração da Rede (Para todos os jogadores)
 
-### 1. Iniciar o Servidor
+Como este jogo é projetado para ser jogado em uma rede local (LAN), vocês precisarão usar um software de VPN para simular uma.
 
-Abra um terminal e execute o seguinte comando:
+1.  Baixe e instale o Radmin VPN (ou similar).
+2.  O jogador Host deve ir em "Criar Rede", definir um nome e senha, e compartilhar essas credenciais com os outros jogadores.
+3.  Os outros jogadores devem ir em "Entrar na Rede" e usar as credenciais fornecidas.
+4.  Após todos entrarem, o Host deve copiar o seu próprio endereço de IP de dentro do Radmin VPN (Ex: `26.XXX.XXX.XXX`).
 
-```bash
-python server.py
-```
+### 2. Para o Host (Servidor)
 
-O servidor será iniciado e aguardará conexões de clientes na porta `18861`.
+1.  Abra o terminal (na pasta do projeto).
+2.  Inicie o servidor:
+    ```sh
+    python server.py
+    ```
+3.  Envie o seu endereço IP do Radmin VPN (obtido na Etapa 1) para os outros jogadores.
 
-### 2. Iniciar os Clientes
+### 3. Para os Clientes (Jogadores)
 
-Abra um novo terminal para cada jogador e execute o cliente, fornecendo um nome de usuário:
+1.  **IMPORTANTE:** Antes de iniciar o jogo, abra o arquivo `client.py` com um editor de texto.
+2.  Na **linha 32** (ou onde estiver indicado), você encontrará uma variável de IP.
+3.  **Altere o endereço de IP** para o endereço IP do Host (o IP obtido do Radmin VPN).
 
-```bash
-python3 client.py Player1
-```
+    *Exemplo em `client.py` (linha 32):*
+    ```python
+    # Altere este IP para o IP do Radmin VPN do Host
+    host = "26.56.73.239" 
+    ```
 
-Repita para cada jogador, substituindo `Player1` por um nome de usuário único (ex: `Player2`, `Player3`, etc.).
+4.  Salve o arquivo `client.py`.
+5.  Abra o terminal (na pasta do projeto) e inicie o cliente:
+    ```sh
+    python client.py
+    ```
 
-## Comandos do Cliente
-
-Após se conectar ao servidor, o cliente exibirá a página atual da história, as opções de escolha, os votos atuais e as mensagens do chat. Você pode interagir com o jogo usando os seguintes comandos no prompt do cliente:
-
--   **Votar em uma escolha:** Digite o número da opção desejada (ex: `1` para a primeira opção).
--   **Enviar mensagem no chat:** Digite `chat <sua mensagem>` (ex: `chat Olá a todos, o que acham da opção 1?`).
--   **Avançar a página:** Digite `avancar`. A página só avançará se uma opção tiver a maioria dos votos.
-
-## Estrutura da História (`story_data.py`)
-
-O arquivo `story_data.py` contém um dicionário `STORY_PAGES` que define a história do jogo. Cada chave do dicionário é um ID de página, e o valor é outro dicionário com:
-
--   `"text"`: O texto da página da história.
--   `"choices"`: Uma lista de dicionários, onde cada um representa uma opção de escolha:
-    -   `"text"`: O texto da opção.
-    -   `"next_page"`: O ID da próxima página se esta opção for escolhida.
-
-Você pode facilmente modificar ou expandir a história editando este arquivo.
-
-## Considerações de Arquitetura
-
-O projeto utiliza RPyC (Remote Python Call) para permitir a comunicação remota entre o servidor e os clientes. O servidor hospeda o estado central do jogo (página atual, chat, votos) e expõe métodos para que os clientes possam interagir. Os clientes, por sua vez, registram callbacks no servidor para receber atualizações em tempo real sobre mudanças na página, no chat e nos votos. Isso garante uma experiência multijogador dinâmica e cooperativa.
-
-## Solução de Problemas
-
--   **`ConnectionRefusedError`**: Certifique-se de que o servidor (`server.py`) está em execução antes de iniciar qualquer cliente.
--   **`TimeoutError`**: Isso pode indicar um problema de rede ou que o servidor está sobrecarregado/bloqueado. Verifique o log do servidor para erros.
--   **Comportamento inesperado do terminal**: Em alguns ambientes, a limpeza de tela (`os.system("clear")`) pode causar problemas com o `input()`. Tente ajustar o cliente para não limpar a tela se isso ocorrer.
-
----
-
-**Autor:** Manus AI
+6.  Divirta-se!
