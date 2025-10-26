@@ -61,7 +61,7 @@ Como este jogo é projetado para ser jogado em uma rede local (LAN), vocês prec
     *Exemplo em `client.py` (linha 32):*
     ```python
     # Altere este IP para o IP do Radmin VPN do Host
-    host = "26.56.73.239" 
+    host = "26.66.56.226" 
     ```
 
 4.  Salve o arquivo `client.py`.
