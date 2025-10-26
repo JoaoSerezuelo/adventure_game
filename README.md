@@ -65,9 +65,9 @@ Como este jogo é projetado para ser jogado em uma rede local (LAN), vocês prec
     ```
 
 4.  Salve o arquivo `client.py`.
-5.  Abra o terminal (na pasta do projeto) e inicie o cliente:
+5.  Abra o terminal (na pasta do projeto) e inicie o app:
     ```sh
-    python client.py
+    streamlit run app.py
     ```
 
 6.  Divirta-se!
