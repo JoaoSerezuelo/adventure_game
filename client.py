@@ -29,7 +29,7 @@ class StoryGameClient(rpyc.Service):
         return self.username
      
     #trocar o ip do host para o ip do pc que esta sendo o servidor no radmin vpn
-    def connect_to_server(self, host="26.241.201.128", port=18861):
+    def connect_to_server(self, host="26.254.252.239", port=18861):
         try:
             self.conn = rpyc.connect(host, port, service=self)
             self.game_service = self.conn.root
